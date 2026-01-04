@@ -5,7 +5,7 @@ const dotenv = require("dotenv");
 dotenv.config();
 
 const IP1 = process.env.IP1 || "1.1.1.1";
-const IP2 = process.env.IP2 || "8.8.8.8"
+const IP2 = process.env.IP2 || "8.8.8.8";
 const CRON = process.env.CRON || "*/1 * * * * *";
 const PACKETLOSS_COUNT = Number(process.env.PACKETLOSS_COUNT) || 60;
 const HOST1 = JSON.parse(process.env.HOST1) || [
@@ -18,8 +18,7 @@ const HOST1 = JSON.parse(process.env.HOST1) || [
     server: "172.16.4.150",
     host: "172.16.4.139",
     key: "Trapper.PacketLoss1",
-  }
-  
+  },
 ];
 const HOST2 = JSON.parse(process.env.HOST2) || [
   {
@@ -31,11 +30,8 @@ const HOST2 = JSON.parse(process.env.HOST2) || [
     server: "172.16.4.150",
     host: "172.16.4.139",
     key: "Trapper.PacketLoss1",
-  }
-  
+  },
 ];
-
-
 
 const session = ping.createSession({
   networkProtocol: ping.NetworkProtocol.IPv4,
@@ -46,21 +42,19 @@ const session = ping.createSession({
   ttl: 128,
 });
 
-
 let pingCount = 0;
 let pingFailed = 0;
 let totalTime = 0;
-
 
 let pingCount1 = 0;
 let pingFailed1 = 0;
 let totalTime1 = 0;
 
-
 cron.CronJob.from({
   cronTime: CRON,
   onTick: function () {
     session.pingHost(IP1, function (error, target, sent, rcvd) {
+      console.log("IP1 Ping:", rcvd - sent, "ms");
 
       CloudflarePing(rcvd - sent);
       if (error) {
@@ -82,13 +76,13 @@ cron.CronJob.from({
   start: true,
 });
 
-
-
 cron.CronJob.from({
   cronTime: CRON,
   onTick: function () {
     session.pingHost(IP2, function (error, target, sent, rcvd) {
+      console.log("IP2 Ping:", rcvd - sent, "ms");
       GooglePing(rcvd - sent);
+
       if (error) {
         pingFailed1++;
       } else {
