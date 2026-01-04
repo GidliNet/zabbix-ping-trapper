@@ -6,7 +6,7 @@ const dotenv = require("dotenv").config;
 
 const IP = process.env.IP || "1.1.1.1";
 const CRON = process.env.CRON || "*/1 * * * * *";
-const PACKETLOSS_COUNT = process.env.PACKETLOSS_COUNT || 60;
+const PACKETLOSS_COUNT = Number(process.env.PACKETLOSS_COUNT) || 60;
 const ZABBIX_TRAPPER = JSON.parse(process.env.ZABBIX_TRAPPER) || [
   {
     server: "172.16.4.150",
