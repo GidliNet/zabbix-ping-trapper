@@ -26,14 +26,11 @@ RUN npm ci
 COPY . .
 
 # Set default environment variables (can be overridden)
-ENV IP1="1.1.1.1"
-ENV IP2 = "8.8.8.8"
-ENV CRON="*/1 * * * * *"
-ENV PACKETLOSS_COUNT=60
 
+ENV HOST='./Config/configuration.json'
+ENV PACKETLOSS_INTERVAL="10"
+ENV CRON="*/1 * * * * *"
 # Zabbix trapper as JSON string
-ENV HOST1='[{   "server": "172.16.4.150",    "host": "172.16.4.139",    "key": "Trapper.Ping"  },{"server": "172.16.4.150","host": "172.16.4.139",    "key": "Trapper.PacketLoss"  },{   "server": "172.16.4.150",    "host": "172.16.4.139",    "key": "Trapper.Ping"  },  {    "server": "172.16.4.150",    "host": "172.16.4.139",    "key": "Trapper.PacketLoss"  }]'
-ENV HOST2='[{   "server": "172.16.4.150",    "host": "172.16.4.139",    "key": "Trapper.Ping"  },{"server": "172.16.4.150","host": "172.16.4.139",    "key": "Trapper.PacketLoss"  },{   "server": "172.16.4.150",    "host": "172.16.4.139",    "key": "Trapper.Ping"  },  {    "server": "172.16.4.150",    "host": "172.16.4.139",    "key": "Trapper.PacketLoss"  }]'
 
 
 EXPOSE 10051 
