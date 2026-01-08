@@ -1,7 +1,8 @@
-const { getCurrentTimestamp } = require("./timestamp");
+const { getCurrentTimestamp, calculatable } = require("./timestamp");
 const ping = require("net-ping");
 const { PostPing, PostPacketloss } = require("./TrapperUtils");
 const cron = require("cron");
+const { log_file } = require("./log_file");
 
 const Process = async (
   IP,
@@ -16,11 +17,9 @@ const Process = async (
   RETRIES,
   CRON
 ) => {
-    
   let pingCount = 0;
   let pingFailed = 0;
   let totalTime = 0;
-
 
   cron.CronJob.from({
     cronTime: CRON,
@@ -36,6 +35,7 @@ const Process = async (
 
       session.pingHost(IP, function (error, target, sent, rcvd) {
         if (error) {
+          log_file(calculatable() + "- Ping request failed: " + error.toString());
           console.log(
             getCurrentTimestamp() +
               ` ${IP} Ping request failed: ` +
@@ -55,10 +55,6 @@ const Process = async (
         totalTime++;
 
         if (totalTime == PACKETLOSS_INTERVAL) {
-          console.log("Reached Packetloss Interval");
-          console.log(
-            getCurrentTimestamp() + " Calculating Packetloss for IP1"
-          );
           const percentage = (pingFailed / totalTime) * 100;
           PostPacketloss(
             IP,

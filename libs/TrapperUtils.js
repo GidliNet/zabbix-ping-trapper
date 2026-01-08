@@ -1,5 +1,5 @@
 const { log_file } = require("./log_file");
-const { getCurrentTimestamp } = require("./timestamp");
+const { getCurrentTimestamp, calculatable } = require("./timestamp");
 const zabbix = require("zabbix-promise");
 
 const PostPing = async (IP, ZABBIX_HOST, ZABBIX_KEY, ZABBIX_SERVER, data) => {
@@ -11,10 +11,7 @@ const PostPing = async (IP, ZABBIX_HOST, ZABBIX_KEY, ZABBIX_SERVER, data) => {
       value: data,
     });
     log_file(
-      getCurrentTimestamp() +
-        `${IP} Ping Trapper was sent with ` +
-        data +
-        ` ms value.`
+      calculatable() + `- ${IP} Ping Trapper was sent with ` + data + ` ms value.`
     );
     console.log(
       getCurrentTimestamp() +
@@ -24,7 +21,7 @@ const PostPing = async (IP, ZABBIX_HOST, ZABBIX_KEY, ZABBIX_SERVER, data) => {
     );
   } catch (error) {
     log_file(
-      getCurrentTimestamp() + `${IP} Ping Trapper encountered an error:` + error
+      calculatable() + `- ${IP} Ping Trapper encountered an error:` + error
     );
     console.log(
       getCurrentTimestamp() + `${IP} Ping Trapper encountered an error:` + error
@@ -48,8 +45,8 @@ const PostPacketloss = async (
     });
 
     log_file(
-      getCurrentTimestamp() +
-        `${IP} Packetloss Trapper was sent with ` +
+      calculatable() +
+        `- ${IP} Packetloss Trapper was sent with ` +
         data +
         ` % value.`
     );
@@ -60,7 +57,9 @@ const PostPacketloss = async (
         ` % value.`
     );
   } catch (error) {
-    log_file(error);
+    log_file(
+      calculatable() + `- ${IP} Packetloss Trapper encountered an error:` + error
+    );
     console.log(
       getCurrentTimestamp() +
         `${IP} Packetloss Trapper encountered an error:` +
