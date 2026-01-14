@@ -1,0 +1,34 @@
+[
+  {
+    "IP": "Host to be pinged here.| You can add multiple hosts by adding more objects in this array.",
+    "PING_TIMEOUT": 600,
+    "RETRIES": 0,
+    "PACKETLOSS_INTERVAL": 10,
+    "TrapperPing": {
+      "server": "Zabbix Server IP",
+      "host": "Zabbix Host host name on data collection ",
+      "key": "Data key for ping value"
+    },
+    "TrapperPacketloss": {
+      "server": "Zabbix Server IP",
+      "host": "Zabbix Host host name on data collection ",
+      "key": "Data key for ping value"
+    }
+  },
+   {
+    "IP": "Host to be pinged here.| You can add multiple hosts by adding more objects in this array.",
+    "PING_TIMEOUT": 600,
+    "RETRIES": 0,
+    "PACKETLOSS_INTERVAL": 10,
+    "TrapperPing": {
+      "server": "Zabbix Server IP",
+      "host": "Zabbix Host host name on data collection ",
+      "key": "Data key for ping value"
+    },
+    "TrapperPacketloss": {
+      "server": "Zabbix Server IP",
+      "host": "Zabbix Host host name on data collection ",
+      "key": "Data key for ping value"
+    }
+  }
+]
