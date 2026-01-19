@@ -40,7 +40,7 @@ try {
           host.TrapperPacketloss.host,
           host.PING_TIMEOUT,
           host.RETRIES,
-          CRON
+          CRON,
         );
       });
     });
