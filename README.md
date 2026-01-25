@@ -25,3 +25,4 @@ It is designed to be simple, flexible, and easy to deploy using Docker, while al
 
 ---
 
+If you are having issue please submit [Here](https://github.com/GidliNet/zabbix-ping-trapper/issues)
