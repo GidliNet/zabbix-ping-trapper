@@ -149,13 +149,3 @@ Issues, feature requests, and pull requests are welcome.
 
 ---
 
-## 🔍 Disclosure
-
-Some portions of this project were **AI-assisted** during development 🤖✨  
-AI tools were used to help with idea generation, code structuring, documentation drafting, and refactoring.
-
-All core logic, final implementation decisions, testing, and integration were **reviewed and validated by the author** to ensure correctness, security, and maintainability ✅🔒
-
-This project may also include sections that were *“vibe coded”* 🎧💻 — iteratively refined through experimentation and rapid feedback — while still following best practices and functional requirements 🛠️📐
-
----
