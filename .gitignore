@@ -136,4 +136,5 @@ dist
 .pnp.*
 
 logs.log
-configuration.json
+/Config/configuration.json
+/logs
