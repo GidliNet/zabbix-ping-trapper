@@ -1,30 +1,70 @@
 const FileSystem = require("fs/promises");
+const FileSystemNonPromise = require("fs");
 const dotenv = require("dotenv");
 const { getCurrentTimeStamp, calculatable } = require("./timestamp");
+const { DateTime } = require("luxon");
 dotenv.config();
 
 const LOGFILE = process.env.LOGFILE || "./logs/logs.log";
+const LOGDIR = process.env.LOGDIR || "./logs";
 const LOGS_DURATION = process.env.LOGS_DURATION;
 const readline = require("readline");
 let logStream;
 const log_file = async (data) => {
-  if (!FileSystem.access("./logs")) {
-   await FileSystem.mkdirSync("./logs");
+  const isDirectoryValid = await validDirectory();
+  const isValidLogFile = await validLogFile();
+  const LogCleaner = await LogsCleaner();
+  if (!LogCleaner) {
+    await validLogFile();
+    setTimeout(async () => {}, 500);
   }
-
-
-  console.log(FileSystem.access(LOGFILE));
-  if (FileSystem.access(LOGFILE)) {
-    validateLogDate();
-  }
-  logStream= await FileSystem.open(LOGFILE,{flags:"a"})
-  logStream.write(data + "\n");
-  logStream.end();
+  const LogWriters = await LogsWriter(data);
 };
 
-const validateLogDate = async () => {
-  const ReadLog = await FileSystem.createReadStream
-  const reader =  readline.createInterface({ input: ReadLog });
+const validDirectory = async () => {
+  try {
+    console.log("Exected");
+    const checkValidDirectory = await FileSystem.access("./logs");
+    console.log("Valid:", checkValidDirectory);
+    if (!checkValidDirectory) {
+      await FileSystem.mkdir("./logs", { recursive: true });
+      console.log("Created logs folder on directory.");
+      return false;
+    } else {
+      return true;
+    }
+  } catch (e) {
+    await FileSystem.mkdir("./logs", { recursive: true });
+    console.log("Created logs folder on directory.");
+  }
+};
+
+const validLogFile = async () => {
+  try {
+    if (await FileSystem.access(LOGFILE)) {
+      await FileSystem.writeFile(
+        LOGFILE,
+        `{"LogFile":{LogStartDate:"${DateTime.now()}"}}\n`,
+        "utf-8",
+      );
+      console.log("Created Log File.");
+      return false;
+    } else {
+      return true;
+    }
+  } catch (e) {
+    await FileSystem.writeFile(
+      LOGFILE,
+      `{"LogFile":{"LogStartDate":"${DateTime.now()}"}}
+`,
+    );
+  }
+};
+
+const LogsCleaner = async () => {
+  const ReadLog = await FileSystemNonPromise.createReadStream(LOGFILE);
+  const reader = readline.createInterface({ input: ReadLog });
+
   const line = await new Promise((resolve, rejects) => {
     reader.on("line", (line) => {
       reader.close();
@@ -34,23 +74,28 @@ const validateLogDate = async () => {
       rejects("Error");
     });
   });
+  ReadLog.close();
 
-  const processedData = line.split(" (");
-
-  if (processedData.length !== 0) {
-    const LogDuration =
-      (calculatable() - new Date(processedData[0])) / (1000 * 60 * 60 * 24);
-    if (LogDuration >= LOGS_DURATION) {
-      console.log(LOGFILE);
-    await  FileSystem.unlink(LOGFILE, (err) => {
-        console.log(err);
-        return;
-      });
-      console.log("LOG File Removed");
-    }
+  const LogDate = DateTime.fromISO(JSON.parse(line).LogFile.LogStartDate);
+  const TimeStamp = DateTime.now();
+  const timeDiff = TimeStamp.diff(LogDate, "days").days;
+  if (timeDiff >= LOGS_DURATION) {
+    await FileSystem.unlink(LOGFILE);
+    return false;
   } else {
-    logStream.write(data + "\n");
+    return true;
   }
+};
+
+const LogsWriter = async (data) => {
+  const logStream = FileSystemNonPromise.createWriteStream(LOGFILE, {
+    flags: "a",
+  });
+  logStream.on("data", (data) => {
+    console.log(data);
+  });
+  logStream.write(data + "\n");
+  logStream.end();
 };
 
 module.exports = { log_file };
