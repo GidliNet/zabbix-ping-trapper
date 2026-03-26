@@ -30,7 +30,10 @@ COPY . .
 ENV HOST='./Config/configuration.json'
 ENV PACKETLOSS_INTERVAL="10"
 ENV CRON="*/1 * * * * *"
-ENV LOGFILE="./logs/logs.log"
+#Day for log before it gets removed .
+ENV LOGS_DURATION=5
+#Logs location should be valid root directory and process should be able to create files / folder
+ENV LOGDIR="./LOGSer"
 # Zabbix trapper as JSON string
 
 

@@ -7,23 +7,23 @@ REPO_URL="https://github.com/GidliNet/zabbix-ping-trapper.git"
 SERVICE_FILE="/etc/systemd/system/${APP_NAME}.service"
 CONFIG_DIR="${APP_DIR}/Config"
 
-echo "⚙️ Installing ${APP_NAME}..."
+echo "Installing ${APP_NAME}..."
 
 # -----------------------------
 # Privilege check
 # -----------------------------
 if [ "$EUID" -ne 0 ]; then
-  echo "❌ Please run as root (use sudo)"
+  echo "Please run as root (use sudo)"
   exit 1
 fi
 
 # -----------------------------
 # System dependencies
 # -----------------------------
-echo "📦 Updating system..."
+echo "Updating system..."
 apt-get update
 
-echo "📦 Installing dependencies (git, curl)..."
+echo "Installing dependencies (git, curl)..."
 apt-get install -y git curl build-essential python3 make g++
 
 
@@ -32,7 +32,7 @@ apt-get install -y git curl build-essential python3 make g++
 # -----------------------------
 export NVM_DIR="/root/.nvm"
 if [ ! -d "$NVM_DIR" ]; then
-  echo "⬇️ Installing NVM..."
+  echo "⬇Installing NVM..."
   curl -fsSL https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash
 fi
 
@@ -42,100 +42,99 @@ source "$NVM_DIR/nvm.sh"
 # -----------------------------
 # Install Node.js v18 (Hydrogen)
 # -----------------------------
-echo "⬇️ Installing Node.js lts/hydrogen (v18)..."
+echo "⬇Installing Node.js lts/hydrogen (v18)..."
 nvm install lts/hydrogen
 nvm use lts/hydrogen
 
 # -----------------------------
 # Clone application
 # -----------------------------
-echo "📁 Installing application to ${APP_DIR}..."
+echo "Installing application to ${APP_DIR}..."
 rm -rf "$APP_DIR"
 git clone "$REPO_URL" "$APP_DIR"
+git checkout experimental
 
 cd "$APP_DIR"
 
 # -----------------------------
 # Install Node dependencies
 # -----------------------------
-echo "📦 Installing Node.js dependencies..."
+echo "Installing Node.js dependencies..."
 npm install --omit=dev
 
 # -----------------------------
 # Create config directory
 # -----------------------------
-echo "📁 Creating config directory..."
+echo "Creating config directory..."
 mkdir -p "$CONFIG_DIR"
 
 # -----------------------------
 # Create .env
 # -----------------------------
-echo "📝 Creating .env file..."
-cat <<EOF > "$APP_DIR/.env"
-HOST='./Config/configuration.json'
-PACKETLOSS_INTERVAL="10"
-CRON="*/1 * * * * *"
-EOF
+# echo "Creating .env file..."
+# cat <<EOF > "$APP_DIR/.env"
+
+# EOF
 
 # -----------------------------
 # Create configuration.json
 # -----------------------------
-echo "📝 Creating configuration.json..."
-cat <<EOF > "$CONFIG_DIR/configuration.json"
-[
-  {
-    "IP": "8.8.8.8",
-    "PING_TIMEOUT": 600,
-    "RETRIES": 0,
-    "PACKETLOSS_INTERVAL": 10,
-    "TrapperPing": {
-      "server": "172.20.1.1",
-      "host": "isp-core",
-      "key": "Trapper.Ping.Google"
-    },
-    "TrapperPacketloss": {
-      "server": "172.20.1.1",
-      "host": "isp-core",
-      "key": "Trapper.PacketLoss.Google"
-    }
-  },
-  {
-    "IP": "1.1.1.1",
-    "PING_TIMEOUT": 600,
-    "RETRIES": 0,
-    "TrapperPing": {
-      "server": "172.20.1.1",
-      "host": "isp-core",
-      "key": "Trapper.Ping.Cloudflare"
-    },
-    "TrapperPacketloss": {
-      "server": "172.20.1.1",
-      "host": "isp-core",
-      "key": "Trapper.PacketLoss.Cloudflare"
-    }
-  },
-  {
-    "IP": "9.9.9.9",
-    "PING_TIMEOUT": 600,
-    "RETRIES": 0,
-    "TrapperPing": {
-      "server": "172.20.1.1",
-      "host": "isp-core",
-      "key": "Trapper.Ping.Cloud9"
-    },
-    "TrapperPacketloss": {
-      "server": "172.20.1.1",
-      "host": "isp-core",
-      "key": "Trapper.PacketLoss.Cloud9"
-    }
-  }
-]
-EOF
+# echo "Creating configuration.json..."
+# cat <<EOF > "$CONFIG_DIR/configuration.json"
+# [
+#   {
+#     "IP": "8.8.8.8",
+#     "PING_TIMEOUT": 600,
+#     "RETRIES": 0,
+#     "PACKETLOSS_INTERVAL": 10,
+#     "TrapperPing": {
+#       "server": "172.20.1.1",
+#       "host": "isp-core",
+#       "key": "Trapper.Ping.Google"
+#     },
+#     "TrapperPacketloss": {
+#       "server": "172.20.1.1",
+#       "host": "isp-core",
+#       "key": "Trapper.PacketLoss.Google"
+#     }
+#   },
+#   {
+#     "IP": "1.1.1.1",
+#     "PING_TIMEOUT": 600,
+#     "RETRIES": 0,
+#     "TrapperPing": {
+#       "server": "172.20.1.1",
+#       "host": "isp-core",
+#       "key": "Trapper.Ping.Cloudflare"
+#     },
+#     "TrapperPacketloss": {
+#       "server": "172.20.1.1",
+#       "host": "isp-core",
+#       "key": "Trapper.PacketLoss.Cloudflare"
+#     }
+#   },
+#   {
+#     "IP": "9.9.9.9",
+#     "PING_TIMEOUT": 600,
+#     "RETRIES": 0,
+#     "TrapperPing": {
+#       "server": "172.20.1.1",
+#       "host": "isp-core",
+#       "key": "Trapper.Ping.Cloud9"
+#     },
+#     "TrapperPacketloss": {
+#       "server": "172.20.1.1",
+#       "host": "isp-core",
+#       "key": "Trapper.PacketLoss.Cloud9"
+#     }
+#   }
+# ]
+# EOF
 
 # -----------------------------
 # Create start.sh
 # -----------------------------
-echo "📝 Creating start.sh..."
+echo "Creating start.sh..."
 cat <<'EOF' > "$APP_DIR/start.sh"
 #!/bin/bash
 
@@ -152,7 +151,7 @@ chmod +x "$APP_DIR/start.sh"
 # -----------------------------
 # Create systemd service
 # -----------------------------
-echo "🛠 Creating systemd service..."
+echo "Creating systemd service..."
 cat <<EOF > "$SERVICE_FILE"
 [Unit]
 Description=Zabbix Ping Trapper
@@ -165,6 +164,8 @@ WorkingDirectory=${APP_DIR}
 ExecStart=${APP_DIR}/start.sh
 Restart=on-failure
 RestartSec=5
+User=root
+Group=root
 Environment=NODE_ENV=production
 
 [Install]
@@ -178,8 +179,8 @@ systemctl daemon-reload
 systemctl enable "$APP_NAME"
 systemctl restart "$APP_NAME"
 
-echo "✅ Installation complete!"
-echo "📌 Edit config files if needed:"
+echo "Installation complete!"
+echo "Edit config files if needed:"
 echo "  - ${APP_DIR}/.env"
 echo "  - ${CONFIG_DIR}/configuration.json"
 echo
