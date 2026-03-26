@@ -5,7 +5,7 @@ const { getCurrentTimeStamp, calculatable } = require("./timestamp");
 const { DateTime } = require("luxon");
 dotenv.config();
 
-const LOGFILE = process.env.LOGFILE || "./logs/logs.log";
+const LOGFILE = `${process.env.LOGDIR}/logs.log` || "./logs/logs.log";
 const LOGDIR = process.env.LOGDIR || "./logs";
 const LOGS_DURATION = process.env.LOGS_DURATION;
 const readline = require("readline");
@@ -23,18 +23,15 @@ const log_file = async (data) => {
 
 const validDirectory = async () => {
   try {
-    console.log("Exected");
-    const checkValidDirectory = await FileSystem.access("./logs");
-    console.log("Valid:", checkValidDirectory);
+    const checkValidDirectory = await FileSystem.access(LOGDIR);
     if (!checkValidDirectory) {
-      await FileSystem.mkdir("./logs", { recursive: true });
-      console.log("Created logs folder on directory.");
+      await FileSystem.mkdir(LOGDIR, { recursive: true });
       return false;
     } else {
       return true;
     }
   } catch (e) {
-    await FileSystem.mkdir("./logs", { recursive: true });
+    await FileSystem.mkdir(LOGDIR, { recursive: true });
     console.log("Created logs folder on directory.");
   }
 };
@@ -80,7 +77,11 @@ const LogsCleaner = async () => {
   const TimeStamp = DateTime.now();
   const timeDiff = TimeStamp.diff(LogDate, "days").days;
   if (timeDiff >= LOGS_DURATION) {
-    await FileSystem.unlink(LOGFILE);
+    await FileSystem.writeFile(
+      LOGFILE,
+      `{"LogFile":{"LogStartDate":"${DateTime.now()}"}}
+`,
+    );
     return false;
   } else {
     return true;
