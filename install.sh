@@ -52,7 +52,7 @@ nvm use lts/hydrogen
 echo "Installing application to ${APP_DIR}..."
 rm -rf "$APP_DIR"
 git clone "$REPO_URL" "$APP_DIR"
-git checkout experimental
+
 
 cd "$APP_DIR"
 
