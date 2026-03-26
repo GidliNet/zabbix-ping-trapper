@@ -70,67 +70,65 @@ mkdir -p "$CONFIG_DIR"
 # -----------------------------
 # Create .env
 # -----------------------------
-echo "Creating .env file..."
-cat <<EOF > "$APP_DIR/.env"
-HOST='./Config/configuration.json'
-PACKETLOSS_INTERVAL="10"
-CRON="*/1 * * * * *"
-EOF
+# echo "Creating .env file..."
+# cat <<EOF > "$APP_DIR/.env"
+
+# EOF
 
 # -----------------------------
 # Create configuration.json
 # -----------------------------
-echo "Creating configuration.json..."
-cat <<EOF > "$CONFIG_DIR/configuration.json"
-[
-  {
-    "IP": "8.8.8.8",
-    "PING_TIMEOUT": 600,
-    "RETRIES": 0,
-    "PACKETLOSS_INTERVAL": 10,
-    "TrapperPing": {
-      "server": "172.20.1.1",
-      "host": "isp-core",
-      "key": "Trapper.Ping.Google"
-    },
-    "TrapperPacketloss": {
-      "server": "172.20.1.1",
-      "host": "isp-core",
-      "key": "Trapper.PacketLoss.Google"
-    }
-  },
-  {
-    "IP": "1.1.1.1",
-    "PING_TIMEOUT": 600,
-    "RETRIES": 0,
-    "TrapperPing": {
-      "server": "172.20.1.1",
-      "host": "isp-core",
-      "key": "Trapper.Ping.Cloudflare"
-    },
-    "TrapperPacketloss": {
-      "server": "172.20.1.1",
-      "host": "isp-core",
-      "key": "Trapper.PacketLoss.Cloudflare"
-    }
-  },
-  {
-    "IP": "9.9.9.9",
-    "PING_TIMEOUT": 600,
-    "RETRIES": 0,
-    "TrapperPing": {
-      "server": "172.20.1.1",
-      "host": "isp-core",
-      "key": "Trapper.Ping.Cloud9"
-    },
-    "TrapperPacketloss": {
-      "server": "172.20.1.1",
-      "host": "isp-core",
-      "key": "Trapper.PacketLoss.Cloud9"
-    }
-  }
-]
-EOF
+# echo "Creating configuration.json..."
+# cat <<EOF > "$CONFIG_DIR/configuration.json"
+# [
+#   {
+#     "IP": "8.8.8.8",
+#     "PING_TIMEOUT": 600,
+#     "RETRIES": 0,
+#     "PACKETLOSS_INTERVAL": 10,
+#     "TrapperPing": {
+#       "server": "172.20.1.1",
+#       "host": "isp-core",
+#       "key": "Trapper.Ping.Google"
+#     },
+#     "TrapperPacketloss": {
+#       "server": "172.20.1.1",
+#       "host": "isp-core",
+#       "key": "Trapper.PacketLoss.Google"
+#     }
+#   },
+#   {
+#     "IP": "1.1.1.1",
+#     "PING_TIMEOUT": 600,
+#     "RETRIES": 0,
+#     "TrapperPing": {
+#       "server": "172.20.1.1",
+#       "host": "isp-core",
+#       "key": "Trapper.Ping.Cloudflare"
+#     },
+#     "TrapperPacketloss": {
+#       "server": "172.20.1.1",
+#       "host": "isp-core",
+#       "key": "Trapper.PacketLoss.Cloudflare"
+#     }
+#   },
+#   {
+#     "IP": "9.9.9.9",
+#     "PING_TIMEOUT": 600,
+#     "RETRIES": 0,
+#     "TrapperPing": {
+#       "server": "172.20.1.1",
+#       "host": "isp-core",
+#       "key": "Trapper.Ping.Cloud9"
+#     },
+#     "TrapperPacketloss": {
+#       "server": "172.20.1.1",
+#       "host": "isp-core",
+#       "key": "Trapper.PacketLoss.Cloud9"
+#     }
+#   }
+# ]
+# EOF
 
 # -----------------------------
 # Create start.sh
@@ -165,6 +163,8 @@ WorkingDirectory=${APP_DIR}
 ExecStart=${APP_DIR}/start.sh
 Restart=on-failure
 RestartSec=5
+User=root
+Group=root
 Environment=NODE_ENV=production
 
 [Install]
