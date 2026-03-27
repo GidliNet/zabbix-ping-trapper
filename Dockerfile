@@ -5,7 +5,7 @@ FROM --platform=$BUILDPLATFORM node:20-alpine
 WORKDIR /app
 
 # Install build dependencies
-RUN apk add --no-cache python3 make g++ git
+RUN apk add --no-cache python3 make g++ git nano
 
 # Create app directory
 WORKDIR /app
