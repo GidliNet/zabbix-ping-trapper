@@ -15,11 +15,15 @@ const Process = async (
   PACKETLOSS_ZABBIX_HOST,
   PING_TIMEOUT,
   RETRIES,
-  CRON
+  CRON,
 ) => {
   let pingCount = 0;
   let pingFailed = 0;
   let totalTime = 0;
+
+  //  for(let i=0;i<1000000;i++){
+
+  //  }
 
   cron.CronJob.from({
     cronTime: CRON,
@@ -35,11 +39,20 @@ const Process = async (
 
       session.pingHost(IP, function (error, target, sent, rcvd) {
         if (error) {
-          log_file(calculatable() + " - Ping request failed: " + error.toString());
+          log_file(
+            calculatable() + " - Ping request failed: " + error.toString(),
+          );
           console.log(
             calculatable() +
               ` - ${IP} Ping request failed: ` +
-              error.toString()
+              error.toString(),
+          );
+          PostPing(
+            IP,
+            PING_ZABBIX_HOST,
+            PING_ZABBIX_KEY,
+            PING_ZABBIX_SERVER,
+            "0",
           );
           pingFailed++;
         } else {
@@ -48,20 +61,23 @@ const Process = async (
             PING_ZABBIX_HOST,
             PING_ZABBIX_KEY,
             PING_ZABBIX_SERVER,
-            rcvd - sent
+            rcvd - sent,
           );
           pingCount++;
         }
         totalTime++;
-
+        if (IP === "8.8.8.8") {
+         
+        }
         if (totalTime == PACKETLOSS_INTERVAL) {
-          const percentage = (pingFailed / totalTime) * 100;
+          let percentage = (pingFailed / totalTime) * 100;
+          
           PostPacketloss(
             IP,
             PACKETLOSS_ZABBIX_HOST,
             PACKETLOSS_ZABBIX_KEY,
             PACKETLOSS_ZABBIX_SERVER,
-            percentage.toFixed(2)
+            percentage.toFixed(2),
           );
           pingCount = 0;
           pingFailed = 0;
