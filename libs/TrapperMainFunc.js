@@ -39,9 +39,9 @@ const Process = async (
 
       session.pingHost(IP, function (error, target, sent, rcvd) {
         if (error) {
-          log_file(
-            calculatable() + " - Ping request failed: " + error.toString(),
-          );
+          // log_file(
+          //   calculatable() + " - Ping request failed: " + error.toString(),
+          // );
           console.log(
             calculatable() +
               ` - ${IP} Ping request failed: ` +
@@ -54,7 +54,7 @@ const Process = async (
             PING_ZABBIX_SERVER,
             "0",
           );
-          pingFailed++;
+          // pingFailed++;
         } else {
           PostPing(
             IP,
@@ -63,26 +63,22 @@ const Process = async (
             PING_ZABBIX_SERVER,
             rcvd - sent,
           );
-          pingCount++;
+          // pingCount++;
         }
-        totalTime++;
-        if (IP === "8.8.8.8") {
-         
-        }
-        if (totalTime == PACKETLOSS_INTERVAL) {
-          let percentage = (pingFailed / totalTime) * 100;
-          
-          PostPacketloss(
-            IP,
-            PACKETLOSS_ZABBIX_HOST,
-            PACKETLOSS_ZABBIX_KEY,
-            PACKETLOSS_ZABBIX_SERVER,
-            percentage.toFixed(2),
-          );
-          pingCount = 0;
-          pingFailed = 0;
-          totalTime = 0;
-        }
+        // totalTime++;
+        // if (totalTime == PACKETLOSS_INTERVAL) {
+        //   let percentage = (pingFailed / totalTime) * 100;
+        //   PostPacketloss(
+        //     IP,
+        //     PACKETLOSS_ZABBIX_HOST,
+        //     PACKETLOSS_ZABBIX_KEY,
+        //     PACKETLOSS_ZABBIX_SERVER,
+        //     percentage.toFixed(2),
+        //   );
+        //   pingCount = 0;
+        //   pingFailed = 0;
+        //   totalTime = 0;
+        // }
       });
     },
     start: true,
