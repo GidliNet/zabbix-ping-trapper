@@ -52,7 +52,7 @@ const Process = async (
             PING_ZABBIX_HOST,
             PING_ZABBIX_KEY,
             PING_ZABBIX_SERVER,
-            "0",
+            0,
           );
           // pingFailed++;
         } else {
